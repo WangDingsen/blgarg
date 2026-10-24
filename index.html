@@ -8,7 +8,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif; -webkit-tap-highlight-color: transparent; }
     html { -webkit-text-size-adjust: 100%; }
-    body { background-color: #e6f0ff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 24px 16px 250px 16px; padding-bottom: calc(250px + env(safe-area-inset-bottom, 0px)); }
+    body { background-color: #e6f0ff; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 24px 16px 340px 16px; padding-bottom: calc(340px + env(safe-area-inset-bottom, 0px)); }
     .forum-container { max-width: 1100px; width: 100%; background-color: #ffffff; border-radius: 32px; box-shadow: 0 20px 40px rgba(0, 80, 200, 0.08), 0 6px 12px rgba(0, 60, 150, 0.05); overflow: hidden; border: 1px solid #cce4ff; }
     .forum-header { position: relative; background: linear-gradient(145deg, #0a1f3d 0%, #123a6b 50%, #0a1f3d 100%); padding: 32px 24px 44px 24px; border-bottom: 3px solid #ffd966; text-align: center; overflow: hidden; }
     #fireworksCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
@@ -19,30 +19,48 @@
     .forum-header .subhead { display: inline-block; background-color: rgba(255, 217, 102, 0.15); color: #ffe9a8; font-weight: 700; font-size: clamp(0.8rem, 2.6vw, 1rem); padding: 6px 22px; border-radius: 40px; letter-spacing: 0.8px; border: 1px solid rgba(255, 217, 102, 0.55); box-shadow: 0 0 16px rgba(255, 217, 102, 0.35), inset 0 0 12px rgba(255, 217, 102, 0.15); margin-top: 6px; text-shadow: 0 0 8px rgba(255, 200, 80, 0.6); }
     .forum-main { padding: 32px 28px 40px; background-color: #ffffff; }
 
-    /* ---------- 千万别点按钮 ---------- */
-    .dont-click-wrap { text-align: center; margin-bottom: 32px; }
-    .dont-click-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 36px; border: none; border-radius: 40px;
-      background: linear-gradient(135deg, #ff3b3b, #b30000);
-      color: #ffffff; font-size: 1.05rem; font-weight: 900;
-      letter-spacing: 2px; cursor: pointer; transition: 0.2s;
-      box-shadow: 0 8px 24px -6px rgba(255, 0, 0, 0.6);
-      animation: pulseDanger 1.8s ease-in-out infinite;
+    /* ============================================================
+       彩蛋按钮 —— 固定在页面最底部
+       ============================================================ */
+    .egg-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px)) 20px;
+      background: linear-gradient(180deg, rgba(240, 247, 255, 0) 0%, #f0f7ff 100%);
+      flex-wrap: wrap;
     }
-    .dont-click-btn:hover {
+    .egg-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 38px;
+      border: none;
+      border-radius: 40px;
+      background: #1a1a1a;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.4);
+    }
+    .egg-btn:hover {
       transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 14px 32px -8px rgba(255, 0, 0, 0.9);
-      background: linear-gradient(135deg, #ff5555, #cc0000);
+      box-shadow: 0 14px 32px -8px rgba(0, 0, 0, 0.6);
+      background: #2a2a2a;
     }
-    .dont-click-btn:active { transform: translateY(0) scale(1); }
-    @keyframes pulseDanger {
-      0%, 100% { box-shadow: 0 8px 24px -6px rgba(255, 0, 0, 0.6); }
-      50% { box-shadow: 0 8px 32px -2px rgba(255, 0, 0, 1); }
-    }
+    .egg-btn:active { transform: translateY(0) scale(1); }
 
     /* ============================================================
-       超级全屏视频弹窗
+       超级全屏视频/音频弹窗
        ============================================================ */
     .video-modal-mask {
       display: none;
@@ -74,12 +92,34 @@
       justify-content: center;
     }
 
-    .video-modal video {
+    .video-modal video,
+    .video-modal audio {
       display: block;
       width: 100%;
       height: 100%;
       object-fit: contain;
       background: #000;
+    }
+
+    .audio-placeholder {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #1a1a1a 0%, #000000 70%);
+      color: #ffd966;
+      text-align: center;
+      padding: 24px;
+    }
+    .audio-placeholder.show { display: flex; }
+    .audio-placeholder .audio-sub {
+      font-size: 1.4rem;
+      color: #ffd966;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-shadow: 0 0 20px rgba(255, 217, 102, 0.6);
     }
 
     .video-close-btn {
@@ -109,7 +149,6 @@
       transform: rotate(90deg) scale(1.08);
     }
 
-    /* 全屏时锁定页面滚动 */
     body.video-playing {
       overflow: hidden;
     }
@@ -154,7 +193,7 @@
     .divider { height: 2px; background: linear-gradient(90deg, transparent, #b8d6ff, #ffffff, #b8d6ff, transparent); margin: 28px 0 12px; }
     .forum-footer { background-color: #f0f7ff; padding: 20px 28px; text-align: center; color: #3a6fb0; font-weight: 500; border-top: 1.5px solid #c2dbff; font-size: 0.9rem; letter-spacing: 0.3px; word-break: break-word; }
     .forum-footer span { color: #0047ab; font-weight: 700; }
-    .speak-fixed-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%); border-top: 2px solid #b8d6ff; box-shadow: 0 -8px 24px -12px rgba(0, 80, 200, 0.25); padding: 14px 20px calc(12px + env(safe-area-inset-bottom, 0px)) 20px; display: flex; justify-content: center; }
+    .speak-fixed-bar { position: fixed; bottom: 70px; left: 0; right: 0; z-index: 100; background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%); border-top: 2px solid #b8d6ff; box-shadow: 0 -8px 24px -12px rgba(0, 80, 200, 0.25); padding: 14px 20px calc(12px + env(safe-area-inset-bottom, 0px)) 20px; display: flex; justify-content: center; }
     .speak-fixed-inner { max-width: 1100px; width: 100%; display: flex; flex-direction: column; gap: 10px; }
     .speak-fixed-title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .speak-fixed-title { font-size: 1rem; font-weight: 700; color: #00337a; display: flex; align-items: center; gap: 6px; }
@@ -171,14 +210,9 @@
     .btn-primary:active { transform: translateY(0); }
     .btn-outline { background-color: #ffffff; color: #0047ab; border: 1.8px solid #b0cdff; }
     .btn-outline:hover { background-color: #e2efff; border-color: #0047ab; }
-    .speak-thanks { text-align: center; font-size: 0.78rem; font-weight: 600; color: #6b8db0; letter-spacing: 0.5px; padding-top: 2px; border-top: 1px dashed #d4e6ff; margin-top: 2px; }
-    .speak-thanks span { color: #0047ab; font-weight: 700; }
-    .speak-source { text-align: center; font-size: 0.75rem; font-weight: 600; color: #7f9fc9; letter-spacing: 0.3px; padding-top: 3px; word-break: break-all; }
-    .speak-source a { color: #0047ab; font-weight: 700; text-decoration: none; border-bottom: 1.5px solid #b0cdff; transition: 0.15s; }
-    .speak-source a:hover { color: #00337a; border-bottom-color: #0047ab; background-color: #e2efff; border-radius: 3px; }
     @media (max-width: 900px) { .forum-main { padding: 26px 22px 36px; } .main-post { padding: 24px 24px; } }
     @media (max-width: 700px) {
-      body { padding: 12px 10px 270px 10px; padding-bottom: calc(270px + env(safe-area-inset-bottom, 0px)); }
+      body { padding: 12px 10px 400px 10px; padding-bottom: calc(400px + env(safe-area-inset-bottom, 0px)); }
       .forum-container { border-radius: 22px; }
       .forum-header { padding: 24px 16px 32px 16px; border-bottom-width: 2px; }
       .top-origin { font-size: 0.76rem; padding: 4px 14px; margin-bottom: 12px; }
@@ -199,7 +233,7 @@
       .temp-message-item { padding: 12px 14px; border-radius: 14px; border-left-width: 4px; }
       .temp-message-content { font-size: 0.9rem; }
       .forum-footer { padding: 16px 16px; font-size: 0.8rem; }
-      .speak-fixed-bar { padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)) 12px; }
+      .speak-fixed-bar { bottom: 100px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)) 12px; }
       .speak-fixed-inner { gap: 8px; }
       .speak-fixed-title { font-size: 0.92rem; }
       .speak-fixed-tips { font-size: 0.66rem; padding: 2px 10px; }
@@ -208,11 +242,9 @@
       .speak-fixed-inputs textarea:focus { height: 72px; }
       .speak-fixed-actions { width: 100%; justify-content: flex-end; gap: 8px; }
       .btn { padding: 10px 22px; font-size: 0.9rem; }
-      .speak-thanks { font-size: 0.72rem; }
-      .speak-source { font-size: 0.68rem; }
 
-      .dont-click-btn { font-size: 0.95rem; padding: 12px 28px; }
-      .dont-click-wrap { margin-bottom: 24px; }
+      .egg-btn { font-size: 0.86rem; padding: 12px 20px; letter-spacing: 1px; }
+      .egg-bar { gap: 8px; padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px)) 10px; }
 
       .video-close-btn { width: 40px; height: 40px; font-size: 1.2rem; top: 14px; right: 14px; }
     }
@@ -222,6 +254,7 @@
       .forum-header .subhead { font-size: 0.7rem; padding: 4px 12px; }
       .post-stat { padding: 6px 11px; font-size: 0.82rem; }
       .reply-content { font-size: 0.85rem; }
+      .egg-btn { font-size: 0.76rem; padding: 10px 16px; letter-spacing: 1px; }
     }
     @media (min-width: 1400px) {
       .forum-container { max-width: 1200px; }
@@ -245,11 +278,6 @@
     </header>
 
     <main class="forum-main">
-
-      <div class="dont-click-wrap">
-        <button class="dont-click-btn" id="dontClickBtn">⚠️ 千万别点</button>
-      </div>
-
       <article class="main-post">
         <div class="post-header">
           <div class="post-author">
@@ -292,6 +320,15 @@
     </footer>
   </div>
 
+  <!-- ============================================================
+       彩蛋按钮 —— 固定在页面最底部
+       ============================================================ -->
+  <div class="egg-bar">
+    <button class="egg-btn" id="eggOneBtn">彩蛋一</button>
+    <button class="egg-btn" id="eggTwoBtn">彩蛋二</button>
+    <button class="egg-btn" id="eggThreeBtn">彩蛋三</button>
+  </div>
+
   <div class="speak-fixed-bar">
     <div class="speak-fixed-inner">
       <div class="speak-fixed-title-row">
@@ -305,20 +342,20 @@
           <button class="btn btn-primary" id="speakSubmitBtn">发送</button>
         </div>
       </div>
-      <div class="speak-thanks">感谢 <span>WEN溫紋</span> 和支持我的小伙伴们</div>
-      <div class="speak-source">
-        源码：<a href="https://github.com/WangDingsen/WangDingsen.github.io" target="_blank" rel="noopener noreferrer">https://github.com/WangDingsen/WangDingsen.github.io</a>
-      </div>
     </div>
   </div>
 
   <!-- ============================================================
-       超级全屏视频弹窗
+       超级全屏视频/音频弹窗（通用）
        ============================================================ -->
   <div class="video-modal-mask" id="videoModalMask">
     <div class="video-modal">
       <button class="video-close-btn" id="videoCloseBtn" title="关闭">✕</button>
-      <video id="dontClickVideo" src="123.MP4" controls playsinline></video>
+      <div class="audio-placeholder" id="audioPlaceholder">
+        <div class="audio-sub">歃血</div>
+      </div>
+      <video id="dontClickVideo" src="" controls playsinline webkit-playsinline style="display:none;"></video>
+      <audio id="audioPlayer" controls playsinline webkit-playsinline style="display:none;"></audio>
     </div>
   </div>
 
@@ -547,38 +584,86 @@
         }
       }
 
-      // ========== 千万别点按钮 → 超级全屏播放 123.MP4 ==========
-      const dontClickBtn = document.getElementById('dontClickBtn');
+      // ========== 通用全屏播放（视频 + 音频） ==========
       const videoModalMask = document.getElementById('videoModalMask');
       const videoCloseBtn = document.getElementById('videoCloseBtn');
       const dontClickVideo = document.getElementById('dontClickVideo');
+      const audioPlayer = document.getElementById('audioPlayer');
+      const audioPlaceholder = document.getElementById('audioPlaceholder');
+      const audioSubText = audioPlaceholder ? audioPlaceholder.querySelector('.audio-sub') : null;
 
-      function openFullscreenVideo() {
+      function playFullscreenVideo(src) {
+        audioPlayer.pause();
+        audioPlayer.removeAttribute('src');
+        audioPlayer.style.display = 'none';
+        audioPlaceholder.classList.remove('show');
+
+        dontClickVideo.style.display = 'block';
+        dontClickVideo.setAttribute('src', src);
+        dontClickVideo.load();
+
         videoModalMask.classList.add('show');
         document.body.classList.add('video-playing');
+
         dontClickVideo.currentTime = 0;
         dontClickVideo.play().catch(function(err) {
           console.log('视频播放失败：', err);
         });
 
-        // 尝试调用浏览器原生全屏 API，实现真正的全屏
-        const modalEl = videoModalMask;
-        if (modalEl.requestFullscreen) {
-          modalEl.requestFullscreen().catch(function() {});
-        } else if (modalEl.webkitRequestFullscreen) {
-          modalEl.webkitRequestFullscreen();
-        } else if (modalEl.msRequestFullscreen) {
-          modalEl.msRequestFullscreen();
+        if (videoModalMask.requestFullscreen) {
+          videoModalMask.requestFullscreen().catch(function() {});
+        } else if (videoModalMask.webkitRequestFullscreen) {
+          videoModalMask.webkitRequestFullscreen();
+        } else if (videoModalMask.msRequestFullscreen) {
+          videoModalMask.msRequestFullscreen();
         }
       }
 
-      function closeFullscreenVideo() {
+      function playFullscreenAudio(src, label) {
+        dontClickVideo.pause();
+        dontClickVideo.removeAttribute('src');
+        dontClickVideo.style.display = 'none';
+
+        if (audioSubText) {
+          audioSubText.textContent = label || '歃血';
+        }
+
+        audioPlaceholder.classList.add('show');
+        audioPlayer.style.display = 'block';
+        audioPlayer.setAttribute('src', src);
+        audioPlayer.load();
+
+        videoModalMask.classList.add('show');
+        document.body.classList.add('video-playing');
+
+        audioPlayer.currentTime = 0;
+        audioPlayer.play().catch(function(err) {
+          console.log('音频播放失败：', err);
+        });
+
+        if (videoModalMask.requestFullscreen) {
+          videoModalMask.requestFullscreen().catch(function() {});
+        } else if (videoModalMask.webkitRequestFullscreen) {
+          videoModalMask.webkitRequestFullscreen();
+        } else if (videoModalMask.msRequestFullscreen) {
+          videoModalMask.msRequestFullscreen();
+        }
+      }
+
+      function closeFullscreenMedia() {
         videoModalMask.classList.remove('show');
         document.body.classList.remove('video-playing');
+
         dontClickVideo.pause();
         dontClickVideo.currentTime = 0;
+        dontClickVideo.removeAttribute('src');
 
-        // 退出浏览器原生全屏
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        audioPlayer.removeAttribute('src');
+
+        audioPlaceholder.classList.remove('show');
+
         if (document.fullscreenElement) {
           document.exitFullscreen().catch(function() {});
         } else if (document.webkitFullscreenElement) {
@@ -588,23 +673,39 @@
         }
       }
 
-      if (dontClickBtn) dontClickBtn.addEventListener('click', openFullscreenVideo);
-      if (videoCloseBtn) videoCloseBtn.addEventListener('click', closeFullscreenVideo);
+      // 彩蛋一 → 123.MP4（视频）
+      const eggOneBtn = document.getElementById('eggOneBtn');
+      if (eggOneBtn) {
+        eggOneBtn.addEventListener('click', function() {
+          playFullscreenVideo('123.MP4');
+        });
+      }
+
+      // 彩蛋二 → 123.mp3（音频），占位文字「歃血」
+      const eggTwoBtn = document.getElementById('eggTwoBtn');
+      if (eggTwoBtn) {
+        eggTwoBtn.addEventListener('click', function() {
+          playFullscreenAudio('123.mp3', '歃血');
+        });
+      }
+
+      // 大家一起16强 → 456.mp3（音频），占位文字「大家一起16强」
+      const eggThreeBtn = document.getElementById('eggThreeBtn');
+      if (eggThreeBtn) {
+        eggThreeBtn.addEventListener('click', function() {
+          playFullscreenAudio('456.mp3', '大家一起16强');
+        });
+      }
+
+      if (videoCloseBtn) videoCloseBtn.addEventListener('click', closeFullscreenMedia);
       if (videoModalMask) {
         videoModalMask.addEventListener('click', function(e) {
-          if (e.target === videoModalMask) closeFullscreenVideo();
+          if (e.target === videoModalMask) closeFullscreenMedia();
         });
       }
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && videoModalMask.classList.contains('show')) {
-          closeFullscreenVideo();
-        }
-      });
-
-      // 监听原生全屏退出（用户按 ESC 退出全屏时同步关闭弹窗）
-      document.addEventListener('fullscreenchange', function() {
-        if (!document.fullscreenElement && videoModalMask.classList.contains('show')) {
-          // 浏览器全屏退出，但弹窗还在 → 保持弹窗，不强制关闭
+          closeFullscreenMedia();
         }
       });
 

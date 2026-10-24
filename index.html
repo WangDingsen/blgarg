@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -18,6 +18,102 @@
     .forum-header h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 800; letter-spacing: -0.5px; color: #ffffff; text-shadow: 0 0 12px rgba(255, 217, 102, 0.9), 0 0 24px rgba(255, 180, 50, 0.7), 2px 2px 0 #b8860b; margin-bottom: 8px; word-break: break-word; line-height: 1.25; }
     .forum-header .subhead { display: inline-block; background-color: rgba(255, 217, 102, 0.15); color: #ffe9a8; font-weight: 700; font-size: clamp(0.8rem, 2.6vw, 1rem); padding: 6px 22px; border-radius: 40px; letter-spacing: 0.8px; border: 1px solid rgba(255, 217, 102, 0.55); box-shadow: 0 0 16px rgba(255, 217, 102, 0.35), inset 0 0 12px rgba(255, 217, 102, 0.15); margin-top: 6px; text-shadow: 0 0 8px rgba(255, 200, 80, 0.6); }
     .forum-main { padding: 32px 28px 40px; background-color: #ffffff; }
+
+    /* ---------- 千万别点按钮 ---------- */
+    .dont-click-wrap { text-align: center; margin-bottom: 32px; }
+    .dont-click-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 36px; border: none; border-radius: 40px;
+      background: linear-gradient(135deg, #ff3b3b, #b30000);
+      color: #ffffff; font-size: 1.05rem; font-weight: 900;
+      letter-spacing: 2px; cursor: pointer; transition: 0.2s;
+      box-shadow: 0 8px 24px -6px rgba(255, 0, 0, 0.6);
+      animation: pulseDanger 1.8s ease-in-out infinite;
+    }
+    .dont-click-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 14px 32px -8px rgba(255, 0, 0, 0.9);
+      background: linear-gradient(135deg, #ff5555, #cc0000);
+    }
+    .dont-click-btn:active { transform: translateY(0) scale(1); }
+    @keyframes pulseDanger {
+      0%, 100% { box-shadow: 0 8px 24px -6px rgba(255, 0, 0, 0.6); }
+      50% { box-shadow: 0 8px 32px -2px rgba(255, 0, 0, 1); }
+    }
+
+    /* ============================================================
+       超级全屏视频弹窗
+       ============================================================ */
+    .video-modal-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: #000;
+      z-index: 999999;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+    .video-modal-mask.show { display: flex; }
+
+    .video-modal {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: #000;
+      border-radius: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-modal video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+
+    .video-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 10;
+      width: 46px;
+      height: 46px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      font-size: 1.4rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+    .video-close-btn:hover {
+      background: rgba(255, 59, 59, 0.95);
+      transform: rotate(90deg) scale(1.08);
+    }
+
+    /* 全屏时锁定页面滚动 */
+    body.video-playing {
+      overflow: hidden;
+    }
+
     .main-post { background-color: #f6fbff; border: 1.5px solid #b8d6ff; border-radius: 28px; padding: 28px 30px; margin-bottom: 36px; box-shadow: 0 6px 20px -8px rgba(0, 100, 255, 0.15); }
     .post-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .post-author { display: flex; align-items: center; gap: 14px; }
@@ -77,7 +173,6 @@
     .btn-outline:hover { background-color: #e2efff; border-color: #0047ab; }
     .speak-thanks { text-align: center; font-size: 0.78rem; font-weight: 600; color: #6b8db0; letter-spacing: 0.5px; padding-top: 2px; border-top: 1px dashed #d4e6ff; margin-top: 2px; }
     .speak-thanks span { color: #0047ab; font-weight: 700; }
-    /* 发言区底部的源码链接 */
     .speak-source { text-align: center; font-size: 0.75rem; font-weight: 600; color: #7f9fc9; letter-spacing: 0.3px; padding-top: 3px; word-break: break-all; }
     .speak-source a { color: #0047ab; font-weight: 700; text-decoration: none; border-bottom: 1.5px solid #b0cdff; transition: 0.15s; }
     .speak-source a:hover { color: #00337a; border-bottom-color: #0047ab; background-color: #e2efff; border-radius: 3px; }
@@ -115,6 +210,11 @@
       .btn { padding: 10px 22px; font-size: 0.9rem; }
       .speak-thanks { font-size: 0.72rem; }
       .speak-source { font-size: 0.68rem; }
+
+      .dont-click-btn { font-size: 0.95rem; padding: 12px 28px; }
+      .dont-click-wrap { margin-bottom: 24px; }
+
+      .video-close-btn { width: 40px; height: 40px; font-size: 1.2rem; top: 14px; right: 14px; }
     }
     @media (max-width: 380px) {
       .forum-header h1 { font-size: 1.1rem; }
@@ -145,6 +245,11 @@
     </header>
 
     <main class="forum-main">
+
+      <div class="dont-click-wrap">
+        <button class="dont-click-btn" id="dontClickBtn">⚠️ 千万别点</button>
+      </div>
+
       <article class="main-post">
         <div class="post-header">
           <div class="post-author">
@@ -204,6 +309,16 @@
       <div class="speak-source">
         源码：<a href="https://github.com/WangDingsen/WangDingsen.github.io" target="_blank" rel="noopener noreferrer">https://github.com/WangDingsen/WangDingsen.github.io</a>
       </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       超级全屏视频弹窗
+       ============================================================ -->
+  <div class="video-modal-mask" id="videoModalMask">
+    <div class="video-modal">
+      <button class="video-close-btn" id="videoCloseBtn" title="关闭">✕</button>
+      <video id="dontClickVideo" src="123.MP4" controls playsinline></video>
     </div>
   </div>
 
@@ -333,10 +448,10 @@
       // ========== 论坛功能 ==========
       let mainPost = { likes: 34, liked: false };
       let replies = [
-        { id: 'r1', author: 'Knight9_迷弟', badge: '应援团', avatarLetter: 'K', time: '2026-02-17 15:34', content: '不是吧，昨天我还看whz直播呢，今天就消失了？' },
-        { id: 'r2', author: 'BLG_唯爱nephh', badge: '老粉', avatarLetter: 'N', time: '2026-02-17 00:32', content: '有人说是被绑架了，但是没有打斗痕迹，电脑都还开着！' },
-        { id: 'r3', author: '板蓝根冲剂', badge: '乐子人', avatarLetter: '板', time: '2026-02-17 15:36', content: '训练室' },
-        { id: 'r4', author: 'BLG_奶芙守护者', badge: '新粉', avatarLetter: '奶', time: '2026-02-17 01:28（大年初一）', content: '仓鼠和大鼠都消失了也太好笑了哈哈哈哈！不过说真的，奶芙最近的状态确实稳，希望新的一年BLG全员健康，一起冲进全球冠军赛！🧧🐹 顺便 <a href="index000.html">管理（疑似）</a>。' }
+        { id: 'r1', author: '汽修一班陈兴裕', badge: '应援团', avatarLetter: 'K', time: '2026-02-17 15:34', content: '不是吧，昨天我还看whz直播呢，今天就消失了？' },
+        { id: 'r2', author: '汽修二班哈基米', badge: '老粉', avatarLetter: '哈', time: '2026-02-17 00:32', content: '有人说是被绑架了，但是没有打斗痕迹，电脑都还开着！' },
+        { id: 'r3', author: '一盒板蓝根', badge: '乐子人', avatarLetter: '板', time: '2026-02-17 15:36', content: '训练室空无一人是真的，我朋友在blg上班，没有一个人出来' },
+        { id: 'r4', author: '奶奶和芙芙', badge: '新粉', avatarLetter: '奶', time: '2026-02-17 01:28', content: '仓鼠和大鼠都消失了也太好笑了哈哈哈哈！不过说真的，奶芙最近的状态确实稳，希望新的一年BLG全员健康，一起冲进全球冠军赛！🧧🐹 顺便 <a href="index000.html">blg官网（疑似）</a>。' }
       ];
       let tempMessages = [];
 
@@ -432,6 +547,67 @@
         }
       }
 
+      // ========== 千万别点按钮 → 超级全屏播放 123.MP4 ==========
+      const dontClickBtn = document.getElementById('dontClickBtn');
+      const videoModalMask = document.getElementById('videoModalMask');
+      const videoCloseBtn = document.getElementById('videoCloseBtn');
+      const dontClickVideo = document.getElementById('dontClickVideo');
+
+      function openFullscreenVideo() {
+        videoModalMask.classList.add('show');
+        document.body.classList.add('video-playing');
+        dontClickVideo.currentTime = 0;
+        dontClickVideo.play().catch(function(err) {
+          console.log('视频播放失败：', err);
+        });
+
+        // 尝试调用浏览器原生全屏 API，实现真正的全屏
+        const modalEl = videoModalMask;
+        if (modalEl.requestFullscreen) {
+          modalEl.requestFullscreen().catch(function() {});
+        } else if (modalEl.webkitRequestFullscreen) {
+          modalEl.webkitRequestFullscreen();
+        } else if (modalEl.msRequestFullscreen) {
+          modalEl.msRequestFullscreen();
+        }
+      }
+
+      function closeFullscreenVideo() {
+        videoModalMask.classList.remove('show');
+        document.body.classList.remove('video-playing');
+        dontClickVideo.pause();
+        dontClickVideo.currentTime = 0;
+
+        // 退出浏览器原生全屏
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(function() {});
+        } else if (document.webkitFullscreenElement) {
+          document.webkitExitFullscreen();
+        } else if (document.msFullscreenElement) {
+          document.msExitFullscreen();
+        }
+      }
+
+      if (dontClickBtn) dontClickBtn.addEventListener('click', openFullscreenVideo);
+      if (videoCloseBtn) videoCloseBtn.addEventListener('click', closeFullscreenVideo);
+      if (videoModalMask) {
+        videoModalMask.addEventListener('click', function(e) {
+          if (e.target === videoModalMask) closeFullscreenVideo();
+        });
+      }
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && videoModalMask.classList.contains('show')) {
+          closeFullscreenVideo();
+        }
+      });
+
+      // 监听原生全屏退出（用户按 ESC 退出全屏时同步关闭弹窗）
+      document.addEventListener('fullscreenchange', function() {
+        if (!document.fullscreenElement && videoModalMask.classList.contains('show')) {
+          // 浏览器全屏退出，但弹窗还在 → 保持弹窗，不强制关闭
+        }
+      });
+
       function init() {
         renderReplies();
         renderTempMessages();
@@ -454,49 +630,6 @@
 
       init();
     })();
-  </script>
-
-  <!-- ============================================================
-       防查看源代码防护（方案一 + 方案二 · 温和版）
-       ============================================================ -->
-  <script>
-  (function() {
-    // 方案一：禁用右键、F12、Ctrl+Shift+I/J/C、Ctrl+U、Ctrl+S、Ctrl+P
-    document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
-      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) { e.preventDefault(); return false; }
-      if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) { e.preventDefault(); return false; }
-      if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) { e.preventDefault(); return false; }
-      if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) { e.preventDefault(); return false; }
-      if (e.ctrlKey && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) { e.preventDefault(); return false; }
-      if (e.ctrlKey && (e.key === 'P' || e.key === 'p' || e.keyCode === 80)) { e.preventDefault(); return false; }
-    });
-    document.addEventListener('dragstart', function(e) { e.preventDefault(); });
-
-    // 方案二：开发者工具检测（温和版）
-    const warningBar = document.createElement('div');
-    warningBar.id = 'devtools-warning-bar';
-    warningBar.style.cssText = 'display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:linear-gradient(135deg,#cc0000,#8b0000);color:#fff;font-family:system-ui,sans-serif;font-size:0.92rem;font-weight:700;text-align:center;padding:12px 16px;box-shadow:0 4px 14px rgba(200,0,0,0.4);letter-spacing:0.5px;';
-    warningBar.innerHTML = '⚠️ 检测到开发者工具已打开，本站内容受保护，请关闭后继续浏览';
-    document.body.appendChild(warningBar);
-
-    let devtoolsOpen = false;
-    const threshold = 160;
-
-    function checkDevTools() {
-      const widthDiff = window.outerWidth - window.innerWidth;
-      const heightDiff = window.outerHeight - window.innerHeight;
-      if (widthDiff > threshold || heightDiff > threshold) {
-        if (!devtoolsOpen) { devtoolsOpen = true; warningBar.style.display = 'block'; }
-      } else {
-        if (devtoolsOpen) { devtoolsOpen = false; warningBar.style.display = 'none'; }
-      }
-    }
-
-    setInterval(checkDevTools, 1000);
-    window.addEventListener('load', function() { setTimeout(checkDevTools, 500); });
-  })();
   </script>
 </body>
 </html>
